@@ -1,20 +1,24 @@
-"use client"; // Allows interactivity (mobile menu toggle)
+"use client";
 
 import Link from "next/link";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-gray-900 text-white shadow-lg">
+    <motion.nav
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="bg-gray-900 text-white shadow-lg"
+    >
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
-          <Link href="/">
-            <span className="text-2xl font-bold cursor-pointer text-white">
-              VibeSticks Wellness
-            </span>
+          <Link href="/" className="text-2xl font-bold cursor-pointer text-white">
+            VibeSticks Wellness
           </Link>
 
           {/* Mobile Menu Button */}
@@ -25,27 +29,40 @@ export default function Navbar() {
             ☰
           </button>
 
-          {/* Desktop Menu Items */}
+          {/* Desktop Menu */}
           <ul className="hidden md:flex space-x-6">
-            <li><Link href="/" className="hover:text-gray-400 transition">Home</Link></li>
-            <li><Link href="/blog" className="hover:text-gray-400 transition">Blog</Link></li>
-            <li><Link href="/community" className="hover:text-gray-400 transition">Community</Link></li>
-            <li><Link href="/resources" className="hover:text-gray-400 transition">Resources</Link></li>
-            <li><Link href="/tools" className="hover:text-gray-400 transition">Tools</Link></li>
+            {["Home", "Blog", "Community", "Resources", "Tools"].map((item, index) => (
+              <motion.li
+                key={index}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Link href={`/${item.toLowerCase()}`} className="hover:text-gray-400 transition">
+                  {item}
+                </Link>
+              </motion.li>
+            ))}
           </ul>
         </div>
 
         {/* Mobile Dropdown Menu */}
         {isOpen && (
-          <ul className="md:hidden flex flex-col bg-gray-900 px-4 py-2 space-y-2">
-            <li><Link href="/" className="block text-white hover:text-gray-400">Home</Link></li>
-            <li><Link href="/blog" className="block text-white hover:text-gray-400">Blog</Link></li>
-            <li><Link href="/community" className="block text-white hover:text-gray-400">Community</Link></li>
-            <li><Link href="/resources" className="block text-white hover:text-gray-400">Resources</Link></li>
-            <li><Link href="/tools" className="block text-white hover:text-gray-400">Tools</Link></li>
-          </ul>
+          <motion.ul
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="md:hidden flex flex-col bg-gray-900 px-4 py-2 space-y-2"
+          >
+            {["Home", "Blog", "Community", "Resources", "Tools"].map((item, index) => (
+              <li key={index}>
+                <Link href={`/${item.toLowerCase()}`} className="block text-white hover:text-gray-400">
+                  {item}
+                </Link>
+              </li>
+            ))}
+          </motion.ul>
         )}
       </div>
-    </nav>
+    </motion.nav>
   );
 }
